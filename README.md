@@ -109,3 +109,100 @@ public class 테스트코드작성을위한 클래스명 {
 ```
 
 형식으로 작성해주세요.
+
+
+---
+## 기능구현
+
+1. 블로그 포스팅 기능<br>
+   닉네임, 제목, 본문, 글번호, 쓴 날짜, 수정날짜, 조회수
+
+2. 회원가입 기능<br>
+아이디, 비밀번호, 닉네임, 회원번호
+
+3. 회원별로 블로그 포스팅 테이블 가짐(회원 닉네임은 중복이 되지 않으므로.)<br>
+*테이블이 여러개인 것은 DB에 무리가 가지 않지만 하나의 테이블에 정보가 많은 채로 WHERE 절로 다 찾는 경우는 무리가 많이 간다.
+
+---
+## 테스트 환경
+테스트 환경은 항상 동일해야 한다.
+
+@테스트 전 <br>
+CREATE TABLE로 테이블을 만들어준다. 
+Dummy data를 몇개 입력해준다.
+<br>
+@테스트 중<br>
+테스트 코드 실행 및 검증
+
+---
+## Service와 Repository의 관계
+사용자 입장에서는 하나의 동작이지만 컴퓨터 입장에서는 여러 동작인 경우가 있다.
+
+**[사용자 입장 - Service layer: 동작을 추상화 한 것]**<br>
+사용자가 인식하는 동작 단위를 비즈니스 로직이라고 생각하면 된다.
+* a라는 계좌로 얼마 보내갰다.
+
+**[컴퓨터 입장 - Repository: 데이터에 접근하는 역할을 한다.]**
+* 내 계좌에서 얼마를 차감한다
+* a의 계좌에 얼마가 입금된다.
+* 내 계좌에서 수수료가 차감된다.
+
+mvc(DB, jsp view, controller) 패턴을 구현하기 위해 현재 채택한 방법이 3-tier architecture이다. 
+
+
+---
+## 테스트 코드 고도화 1(트랜잭션 활용)
+
+일반적으로 배포를 위한 빌드는 테스트코드를 모두 통과해야만 완료되게 설정합니다.
+
+당연히 모든 기능이 돌아간다는 전제가 되어야 배포를 할 수 있기 때문입니다.
+
+그러나 불행하게도 많은 테스트를 진행하는데 매번 테이블을 생성했다 지웠다 하는것은 비효율적입니다.
+
+따라서 트랜잭션을 걸고, 메서드단위로 커밋을 하지 않는 방식으로
+
+격리성을 지키면서도 DB를 매 단위마다 초기화할 수 있습니다.
+
+방법은 아래와 같이 @Test 가 붙은 테스트 메서드에 추가로 @Transactional 을 붙이면 됩니다.
+```
+@Test
+@Transactional
+public void 테스트메서드(){
+	...
+}
+```
+
+---
+## 테스트 코드 고도화 2(병렬처리)
+
+
+src/test/resources/junit-platform.properties
+```
+junit.jupiter.execution.parallel.enabled=true
+junit.jupiter.execution.parallel.mode.classes.default=concurrent
+junit.jupiter.execution.parallel.mode.default=concurrent
+junit.jupiter.execution.parallel.config.strategy=dynamic
+junit.jupiter.execution.parallel.config.dynamic.factor=1
+```
+- enabled : 병렬실행여부(true/false)
+- mode.classes.default : 클래스 단위 병렬수행여부(same_thread / concurrent)
+- mode.default : 함수 단위 동일 스레드(same_thread / concurrent)
+- config.stratergy : 병렬수행 및 스레드 풀 전략(dynamic<자동 최적화 계산> / fixed<임의의 값 지정>)
+- config.dynamic.factor : dynamic 전략 채택시 곱할 인자 수(1은 cpu의 코어 숫자만큼 채택)
+
+위 파일을 생성하고 설정을 위와같이 하고 테스트 코드를 돌리면 동시에 돌아가는것을 볼 수 있습니다.
+
+---
+## JSP 설정
+controller를 활용해서 화면을 띄우기 위해 `build.gradle`에 다음 dependencies를 implement 한다.
+```agsl
+	implementation group: 'org.glassfish.web', name: 'jakarta.servlet.jsp.jstl', version: '2.0.0'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+```
+
+
+`application.properties` 파일에 다음 코드를 추가한다.
+```agsl
+spring.mvc.view.prefix=/WEB-INF/views/
+spring.mvc.view.suffix=.jsp
+```

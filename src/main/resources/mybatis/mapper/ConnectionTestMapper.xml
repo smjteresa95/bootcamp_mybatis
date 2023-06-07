@@ -7,12 +7,11 @@
 
 <!--id: DB와 연동시킬 메서드명-->
 
-<!--namespace: "패키지명 처음부터 끝까지 .으로 구분해서 집어넣기.연동할 자바 클래스"-->
-<mapper namespace="com.spring.blog.BlogApplicationTests">
+<!--namespace: "패키지명 처음부터 끝까지 .으로 구분해서 집어넣기.연동할 인터페이스 자바 클래스"-->
+<mapper namespace="com.spring.blog.repository.ConnectionTestRepository">
     <!--CTR 인터페이스의 getNow()메서드를 호출하면 아래 쿼리문이 실행된다
     리턴타입은 문자열이고, 자바 내장 자료형은 소문자로만 작성해야한다. 리스트도 단일 자료형처럼 작성한다. -->
   <select id="getNow" resultType="string">
       SELECT now()
   </select>
-
 </mapper>
