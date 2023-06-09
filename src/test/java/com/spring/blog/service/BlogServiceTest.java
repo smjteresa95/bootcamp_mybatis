@@ -1,7 +1,7 @@
 package com.spring.blog.service;
 
 import com.spring.blog.entity.Blog;
-import com.spring.blog.web.dto.BlogResponseDTO;
+import com.spring.blog.web.dto.blog.BlogResponseDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
