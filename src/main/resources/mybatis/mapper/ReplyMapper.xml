@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.blog.repository.ReplyRepository">
+
+    <!--해당 blog id에 남겨진 reply 모두 조회-->
+    <select id="findAllByBlogId" resultType="com.spring.blog.web.dto.reply.ReplyFindByIdDTO" parameterType="long">
+        SELECT
+            reply_id as replyId,
+            reply_writer as replyWriter,
+            reply_Content as replyContent,
+            published_at as publishedAt,
+            updated_at as updatedAt
+        FROM
+            Reply
+        WHERE
+            blog_id = #{blog_id}
+        ORDER BY
+            reply_id DESC
+    </select>
+
+    <!--하나의 댓글만 조회-->
+    <select id="findByReplyId" resultType="com.spring.blog.web.dto.reply.ReplyFindByIdDTO" parameterType="int">
+        SELECT
+            reply_id as replyId,
+            reply_writer as replyWriter,
+            reply_Content as replyContent,
+            published_at as publishedAt,
+            updated_at as updatedAt
+        FROM
+            Reply
+        WHERE
+            reply_id = #{reply_id}
+    </select>
+
+    <insert id="saveByBlogId" parameterType="com.spring.blog.web.dto.reply.ReplySaveDTO">
+        INSERT INTO
+            reply (reply_writer, reply_content)
+        VALUES
+            (#{replyWriter}, #{replyContent})
+        WHERE
+            blog_id = #{blogId}
+    </insert>
+    
+</mapper>
