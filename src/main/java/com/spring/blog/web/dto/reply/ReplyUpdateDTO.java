@@ -1,17 +1,21 @@
 package com.spring.blog.web.dto.reply;
 
-import com.spring.blog.entity.Reply;
 import lombok.*;
+
+import java.time.LocalDateTime;
+
 
 @Getter @Setter
 @AllArgsConstructor @Builder
 @NoArgsConstructor
 public class ReplyUpdateDTO {
     private int replyId;
+    private String replyWriter;
     private String replyContent;
 
-    public ReplyUpdateDTO(Reply reply){
-        this.replyId = reply.getReplyId();
-        this.replyContent = reply.getReplyContent();
+    public ReplyUpdateDTO(ReplyFindByIdDTO replyFindByIdDTO){
+        this.replyId = replyFindByIdDTO.getReplyId();
+        this.replyWriter = replyFindByIdDTO.getReplyWriter();
+        this.replyContent = replyFindByIdDTO.getReplyContent();
     }
 }

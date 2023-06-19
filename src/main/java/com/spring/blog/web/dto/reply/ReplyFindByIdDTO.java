@@ -12,13 +12,13 @@ public class ReplyFindByIdDTO {
     private String replyWriter;
     private String replyContent;
     private LocalDateTime publishedAt;
-    private LocalDateTime updatedAT;
+    private LocalDateTime updatedAt;
 
     public ReplyFindByIdDTO(Reply reply){
         this.replyId = reply.getReplyId();
         this.replyWriter=reply.getReplyWriter();
         this.replyContent = reply.getReplyContent();
         this.publishedAt = reply.getPublishedAt();
-        this.updatedAT = reply.getUpdatedAT();
+        this.updatedAt = reply.getUpdatedAt();
     }
 }

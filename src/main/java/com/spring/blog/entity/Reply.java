@@ -16,5 +16,5 @@ public class Reply {
     private String replyWriter;
     private String replyContent;
     private LocalDateTime publishedAt;
-    private LocalDateTime updatedAT;
+    private LocalDateTime updatedAt;
 }
