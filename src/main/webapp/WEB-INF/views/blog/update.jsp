@@ -10,15 +10,15 @@
 </head>
 <body>
     <div class="container">
-        <form action="/blog/detail/${blog.blogId}" method="POST">
+        <form action="/blog/update" method="POST">
             <div class="row">
                 <div class="col-3">
                   <label for="writer" class="form-label">글쓴이</label>
-                  <input name="writer" type="text" class="form-control" id="writer" value="${blog.writer}" placeholder="글쓴이를 적어주세요" readonly="readonly">
+                  <input name="writer" type="text" class="form-control" id="writer" value="${blog.writer}" readonly="readonly">
                 </div>
                 <div class="col-3">
                   <label for="title" class="form-label">제목</label>
-                  <input name="BlogTitle" type="text" class="form-control" id="title" value="${blog.blogTitle}" placeholder="제목을 적어주세요">
+                  <input name="BlogTitle" type="text" class="form-control" id="title" value="${blog.blogTitle}">
                 </div>
             </div>
 
@@ -32,10 +32,11 @@
             <div class="row">
                 <div class="col-6">
                     <input type="hidden" value="${blog.blogId}" name="blogId">
-                    <input type="submit" class="btn btn-primary" value="수정">
+                    <input type="submit" class="btn btn-primary" id="update" value="수정">
                 </div>
             </div>
         </form>
     </div>
+
 </body>
 </html>

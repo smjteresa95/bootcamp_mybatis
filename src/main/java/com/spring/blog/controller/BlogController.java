@@ -18,11 +18,11 @@ import java.util.List;
 @RequestMapping("/blog")
 @Log4j2 //sout이 아닌
 //sout은 로그파일에 남지 않는다. log.info()는 로그에 남는다.
-public class blogController {
+public class BlogController {
     //controller layer는 service layer를 직접 호출한다.
     private BlogService blogService;
-    @Autowired //생성자 주입
-    public blogController(BlogService blogService) {
+   //생성자 주입
+    public BlogController(BlogService blogService) {
         this.blogService = blogService;
     }
     //GET 방식
@@ -93,6 +93,7 @@ public class blogController {
         Blog blog = blogService.findById(blogId);
         //.jsp로 보내기 위해 적재한다.
         model.addAttribute("blog", blog);
+        //jsp파일 위치
         return "blog/update";
     }
 
@@ -100,7 +101,7 @@ public class blogController {
     public String update(Blog blog){
         blogService.update(blog);
         log.info("글번호 " + blog.getBlogId() + ": 수정되었습니다.");
-        return "redirect:blog/detail/" +blog.getBlogId();
+        return "redirect:/blog/detail/" + blog.getBlogId();
 //        return "redirect:blog/list";
     }
 

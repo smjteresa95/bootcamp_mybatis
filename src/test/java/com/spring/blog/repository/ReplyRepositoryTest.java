@@ -1,17 +1,15 @@
 package com.spring.blog.repository;
 
-import com.spring.blog.web.dto.reply.ReplyFindByIdDTO;
-import com.spring.blog.web.dto.reply.ReplyInsertDTO;
-import com.spring.blog.web.dto.reply.ReplyUpdateDTO;
+import com.spring.blog.web.dto.reply.ReplyResponseDTO;
+import com.spring.blog.web.dto.reply.ReplyCreateRequestDTO;
+import com.spring.blog.web.dto.reply.ReplyUpdateRequestDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class ReplyRepositoryTest {
         //given
         long blogId = 2;
         //when
-        List<ReplyFindByIdDTO> replyDTOList = repository.findAllReplyByBlogId(blogId);
+        List<ReplyResponseDTO> replyDTOList = repository.findAllReplyByBlogId(blogId);
         //then
         assertThat(replyDTOList.size()).isEqualTo(4);
     }
@@ -41,7 +39,7 @@ public class ReplyRepositoryTest {
         int replyId = 2;
         String expectedReplyContent = "댓글2";
         //when
-        ReplyFindByIdDTO replyDTO = repository.findByReplyId(replyId);
+        ReplyResponseDTO replyDTO = repository.findByReplyId(replyId);
         //then
         assertThat(replyDTO.getReplyContent()).isEqualTo(expectedReplyContent);
     }
@@ -65,7 +63,7 @@ public class ReplyRepositoryTest {
         long blogId=2;
         String replyWriter = "replyWriter";
         String replyContent = "replyContent";
-        ReplyInsertDTO insertDTO = ReplyInsertDTO.builder()
+        ReplyCreateRequestDTO insertDTO = ReplyCreateRequestDTO.builder()
                 .blogId(blogId).replyWriter(replyWriter).replyContent(replyContent).build();
 
         //when
@@ -73,12 +71,12 @@ public class ReplyRepositoryTest {
 
         //then
         //3번 블로그에 달린 댓글을 리스트로 가져오기
-        List<ReplyFindByIdDTO> replyFoundByBlogIdList = repository.findAllReplyByBlogId(blogId);
+        List<ReplyResponseDTO> replyFoundByBlogIdList = repository.findAllReplyByBlogId(blogId);
         //가장 마지막에 달린 댓글 넣을 객체를 null로 초기화.
 
         //replyId가 가장 큰 값을 찾아서 lastestReply로 대입.
-        ReplyFindByIdDTO latestReply = null;
-        for(ReplyFindByIdDTO reply:  replyFoundByBlogIdList){
+        ReplyResponseDTO latestReply = null;
+        for(ReplyResponseDTO reply:  replyFoundByBlogIdList){
             //replyId 값이 0보다 커야 한다.
             if(reply.getReplyId() > 0 && latestReply == null || reply.getReplyId() > latestReply.getReplyId())
                 latestReply = reply;
@@ -105,19 +103,30 @@ public class ReplyRepositoryTest {
         String updatedReplyContent = "updatedReplyContent";
 
         //업데이트 할 댓글 가져오기
-        ReplyFindByIdDTO replyFoundByReplyId = repository.findByReplyId(replyId);
+        ReplyResponseDTO replyFoundByReplyId = repository.findByReplyId(replyId);
 
         //가지고 온 댓글을 업데이트 할 수 있는 DTO에 대입 후 수정
-        ReplyUpdateDTO updateDTO = new ReplyUpdateDTO(replyFoundByReplyId);
-        updateDTO = ReplyUpdateDTO.builder()
+        ReplyUpdateRequestDTO updateDTO = new ReplyUpdateRequestDTO(replyFoundByReplyId);
+        updateDTO = ReplyUpdateRequestDTO.builder()
                 .replyId(replyId).replyWriter(writer).replyContent(updatedReplyContent).build();
 
         repository.update(updateDTO);
 
-        ReplyFindByIdDTO result = repository.findByReplyId(replyId);
+        ReplyResponseDTO result = repository.findByReplyId(replyId);
         assertThat(result.getReplyWriter()).isEqualTo(writer);
         assertThat(result.getReplyContent()).isEqualTo(updatedReplyContent);
-//        assertTrue(result.getUpdatedAt().isAfter(result.getPublishedAt()));
+        assertThat(result.getUpdatedAt().isAfter(result.getPublishedAt()));
+    }
+
+    @Test
+    @Transactional
+    public void deleteAllReplyByBlogIdTest(){
+        long blogId = 2;
+
+        repository.deleteAllReplyByBlogId(blogId);
+
+        List<ReplyResponseDTO> replyList = repository.findAllReplyByBlogId(blogId);
+        assertThat(replyList.size()).isEqualTo(0);
     }
 
 }

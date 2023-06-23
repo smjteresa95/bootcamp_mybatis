@@ -206,3 +206,11 @@ controller를 활용해서 화면을 띄우기 위해 `build.gradle`에 다음 d
 spring.mvc.view.prefix=/WEB-INF/views/
 spring.mvc.view.suffix=.jsp
 ```
+
+## src 경로
+
+spring boot는 기본적으로 다음 경로를 기본탐색 한다
+* /resources/META-INF
+* /resources
+* /static
+* /public 

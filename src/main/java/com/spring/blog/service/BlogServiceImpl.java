@@ -2,17 +2,24 @@ package com.spring.blog.service;
 
 import com.spring.blog.entity.Blog;
 import com.spring.blog.repository.BlogRepository;
+import com.spring.blog.repository.ReplyRepository;
 import com.spring.blog.web.dto.blog.BlogResponseDTO;
+import com.spring.blog.web.dto.reply.ReplyResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 public class BlogServiceImpl implements BlogService{
     BlogRepository blogRepository;
+    //글을 하나 삭제 할 때 달려있는 댓글도 모두 지우기 위해.
+    ReplyRepository replyRepository;
 
-    public BlogServiceImpl(BlogRepository blogRepository){
+    public BlogServiceImpl(BlogRepository blogRepository, ReplyRepository replyRepository){
         this.blogRepository=blogRepository;
+        this.replyRepository=replyRepository;
     }
+
+
     @Override
     public List<Blog> findAll() {
         return blogRepository.findAll();
@@ -30,6 +37,9 @@ public class BlogServiceImpl implements BlogService{
 
     @Override
     public void deleteById(long blogId) {
+        //블로그 글에 연계된 댓글이 존재하는 지 확인 후 댓글 모두 삭제.
+        List<ReplyResponseDTO> replyList = replyRepository.findAllReplyByBlogId(blogId);
+        if(replyList.size()>0) replyRepository.deleteAllReplyByBlogId(blogId);
         blogRepository.deleteById(blogId);
     }
 

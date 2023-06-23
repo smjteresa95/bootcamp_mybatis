@@ -7,7 +7,7 @@
 
 
     <!--해당 blog id에 남겨진 reply 모두 조회-->
-    <select id="findAllReplyByBlogId" resultType="com.spring.blog.web.dto.reply.ReplyFindByIdDTO" parameterType="long">
+    <select id="findAllReplyByBlogId" resultType="com.spring.blog.web.dto.reply.ReplyResponseDTO" parameterType="long">
         SELECT
             reply_id as replyId,
             reply_writer as replyWriter,
@@ -23,7 +23,7 @@
     </select>
 
     <!--하나의 댓글만 조회-->
-    <select id="findByReplyId" resultType="com.spring.blog.web.dto.reply.ReplyFindByIdDTO" parameterType="int">
+    <select id="findByReplyId" resultType="com.spring.blog.web.dto.reply.ReplyResponseDTO" parameterType="int">
         SELECT
             reply_id as replyId,
             reply_writer as replyWriter,
@@ -34,9 +34,11 @@
             Reply
         WHERE
             reply_id = #{replyId}
+        ORDER BY
+            reply_id DESC
     </select>
 
-    <insert id="save" parameterType="com.spring.blog.web.dto.reply.ReplyInsertDTO">
+    <insert id="save" parameterType="com.spring.blog.web.dto.reply.ReplyCreateRequestDTO">
         INSERT INTO
             reply (blog_id, reply_writer, reply_content)
         VALUES
@@ -50,7 +52,7 @@
             reply_id = #{replyId}
     </delete>
     
-    <update id="update" parameterType="com.spring.blog.web.dto.reply.ReplyUpdateDTO">
+    <update id="update" parameterType="com.spring.blog.web.dto.reply.ReplyUpdateRequestDTO">
         UPDATE
             reply
         SET
@@ -60,5 +62,12 @@
         WHERE
             reply_id = #{replyId}
     </update>
+
+    <delete id="deleteAllReplyByBlogId" parameterType="long">
+        DELETE FROM
+            reply
+        WHERE
+            blog_id = #{blogId}
+    </delete>
     
 </mapper>
