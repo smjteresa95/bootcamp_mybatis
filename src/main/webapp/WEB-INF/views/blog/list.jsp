@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container">
-
+        <h1>글목록</h1>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -24,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="blog" items="${blogList}">
+                <c:forEach var="blog" items="${pageInfo.toList()}">
                     <tr>
                         <td><c:out value="${blog.blogId}"/></td>
                         <td>
@@ -42,8 +42,34 @@
             </tbody>
         </table>
 
-        <a class="btn btn-primary" href="/blog/insert" method="GET">글쓰기</a>
+        <div class=row>
+            <div class="col-1">
+                <a class="btn btn-primary" href="/blog/insert" method="GET">글쓰기</a>
+            </div>
+            <div class="col-10 ">
+                  <ul class="pagination justify-content-center">
 
+                    <c:if test="${startPageNum !=1}">
+                        <li class="page-item ">
+                        <a class="page-link" href="/blog/list/{startPageNum-1}">Previous</a>
+                        </li>
+                    <c:if>
+
+                    <c:forEach begin = "${startPageNum}" end="${endPageNum}" var="btnNum">
+                        <li class="page-item ${currentPage == btnNum ? 'active' : ''}">
+                        <a class="page-link" href="/blog/list/${btnNum}">${btnNum}</a>
+                        </li>
+                    </c:forEach>
+
+                    <c:if test="${endPageNum != pageInfo.getTotalPage()}">
+                        <li class="page-item">
+                         <a class="page-link" href="/blog/list/${btnNum+1}">Next</a>
+                        </li>
+                    <c:if>
+
+                  </ul>
+            </div>
+        </div>
 
     </div>
 </body>

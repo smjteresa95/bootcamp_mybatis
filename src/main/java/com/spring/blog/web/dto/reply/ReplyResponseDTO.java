@@ -21,4 +21,13 @@ public class ReplyResponseDTO {
         this.publishedAt = reply.getPublishedAt();
         this.updatedAt = reply.getUpdatedAt();
     }
+
+    public Reply toEntity(ReplyResponseDTO responseDTO){
+        return Reply.builder()
+                .replyId(this.replyId)
+                .replyWriter(this.replyWriter)
+                .replyContent(this.replyContent)
+                .build();
+    }
+
 }

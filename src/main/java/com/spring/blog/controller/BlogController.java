@@ -3,8 +3,10 @@ package com.spring.blog.controller;
 import com.spring.blog.entity.Blog;
 import com.spring.blog.exception.NotFoundBlogIdException;
 import com.spring.blog.service.BlogService;
+import com.spring.blog.web.dto.blog.BlogUpdateDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +27,43 @@ public class BlogController {
     public BlogController(BlogService blogService) {
         this.blogService = blogService;
     }
-    //GET 방식
-    @RequestMapping("/list")
-    public String findAll(Model model){
-        List<Blog> blogList = blogService.findAll();
-        model.addAttribute("blogList", blogList);
-        System.out.println("getting blog list");
-        return "/blog/list";
+
+
+    //Pathvariable에서 null처리 할 경우는 아래와 같이 경로 패턴변수가 포함된 경로와, 없는 경로 두 개를 묶어준다.
+    //@PathVariable(required = false) 이걸 하지 않으면 /list/뒤에 pageNum이 있어야 한다고 인식한다.
+    @RequestMapping(value = {"/list/{pageNum}", "/list"})
+    public String list(Model model, @PathVariable(required = false) Long pageNum){
+        System.out.println("Page num" + pageNum);
+        Page<Blog> pageInfo = blogService.findAll(pageNum);
+
+        //한 페이지에 보여야 하는 페이징 버튼 그룹의 갯수
+        final int PAGE_BTN_NUM = 10;
+        // 현재 조회중인 페이지 번호(0 부터 세므로 주의)
+        int currentPageNum = pageInfo.getNumber() + 1;  //현재 조회중인 페이지를 강조하기 위해서 필요하다
+        // 현재 조회중인 페이지 그룹의 끝 번호
+        int endPageNum = (int) Math.ceil(currentPageNum / (double) PAGE_BTN_NUM) * PAGE_BTN_NUM;
+        // 현재 조회중인 페이지 그룹의 시작번호
+        int startPageNum = endPageNum - PAGE_BTN_NUM + 1;
+        //마지막 그룹번호 보정
+        endPageNum = endPageNum > pageInfo.getTotalPages() ? pageInfo.getTotalPages() : endPageNum;
+
+        model.addAttribute("currentPageNum", currentPageNum);
+        model.addAttribute("endPageNum", endPageNum);
+        model.addAttribute("startPageNum", startPageNum);
+        model.addAttribute("pageInfo", pageInfo);
+
+
+        model.addAttribute("pageInfo", pageInfo);
+        return "blog/list";
     }
+    //GET 방식
+//    @RequestMapping("/list")
+//    public String findAll(Model model){
+//        List<Blog> blogList = blogService.findAll();
+//        model.addAttribute("blogList", blogList);
+//        System.out.println("getting blog list");
+//        return "/blog/list";
+//    }
 
     @RequestMapping("/detail/{blogId}")
     public String detail(@PathVariable long blogId, Model model){
@@ -55,7 +86,7 @@ public class BlogController {
         model.addAttribute("blogContent", blog.getBlogContent());
         model.addAttribute("publishedAt", blog.getPublishedAt());
         model.addAttribute("updatedAt", blog.getUpdatedAt());
-        model.addAttribute("blogCoung", blog.getBlogCount());
+        model.addAttribute("blogCount", blog.getBlogCount());
         return "blog/detail";
     }
 
@@ -104,6 +135,7 @@ public class BlogController {
         return "redirect:/blog/detail/" + blog.getBlogId();
 //        return "redirect:blog/list";
     }
+
 
     //해당 글 번호의 detail 페이지로 넘어가게 하기
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 //entity 클래스는 DB 테이블에 대응하는 자바 클래스이고, 데이터 전달을 위한 목적보다는 정의를 위해서 쓰는 경우가 많다.
@@ -17,9 +18,9 @@ public class BlogSaveRequestDTO {
     private String writer;
     private String blogTitle;
     private String blogContent;
-    private Date publishedAt;
-    private Date updatedAt;
-    private Integer blogCount;
+    private LocalDateTime publishedAt;
+    private LocalDateTime updatedAt;
+    private Long blogCount;
 
     public Blog toEntity(){
         return Blog.builder()
