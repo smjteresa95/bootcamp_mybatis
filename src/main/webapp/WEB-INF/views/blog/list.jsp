@@ -50,10 +50,10 @@
                   <ul class="pagination justify-content-center">
 
                     <c:if test="${startPageNum !=1}">
-                        <li class="page-item ">
+                        <li class="page-item">
                         <a class="page-link" href="/blog/list/{startPageNum-1}">Previous</a>
                         </li>
-                    <c:if>
+                    </c:if>
 
                     <c:forEach begin = "${startPageNum}" end="${endPageNum}" var="btnNum">
                         <li class="page-item ${currentPage == btnNum ? 'active' : ''}">
@@ -61,11 +61,11 @@
                         </li>
                     </c:forEach>
 
-                    <c:if test="${endPageNum != pageInfo.getTotalPage()}">
+                    <c:if test="${endPageNum != pageInfo.getTotalPages()}">
                         <li class="page-item">
                          <a class="page-link" href="/blog/list/${btnNum+1}">Next</a>
                         </li>
-                    <c:if>
+                    </c:if>
 
                   </ul>
             </div>

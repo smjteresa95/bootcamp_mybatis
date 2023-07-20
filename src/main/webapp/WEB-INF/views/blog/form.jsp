@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-3">
                   <label for="writer" class="form-label">글쓴이</label>
-                  <input name="writer" type="text" class="form-control" id="writer" placeholder="글쓴이를 적어주세요">
+                  <input name="writer" type="text" class="form-control" id="writer" value="${username}" readonly>
                 </div>
                 <div class="col-3">
                   <label for="title" class="form-label">제목</label>

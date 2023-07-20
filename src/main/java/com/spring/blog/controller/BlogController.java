@@ -7,12 +7,14 @@ import com.spring.blog.web.dto.blog.BlogUpdateDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.security.Principal;
 import java.util.List;
 
 //URL을 분석 할 수 있는 기능이 @Controller에 있다.
@@ -65,8 +67,10 @@ public class BlogController {
 //        return "/blog/list";
 //    }
 
+    //TODO
     @RequestMapping("/detail/{blogId}")
-    public String detail(@PathVariable long blogId, Model model){
+    public String detail(@PathVariable long blogId, Model model, Principal principal){
+        model.addAttribute("username", principal.getName());
         Blog blog = blogService.findById(blogId);
 //        if(blog==null){
 //            throw new NotFoundBlogIdException("없는 blogId로 조회했습니다. 조회번호: " +blogId);
@@ -94,10 +98,18 @@ public class BlogController {
     //대신 form 페이지는 GET 방식으로 접속했을 때 연결해주고
     //form에서
 
+    //TODO
+    //공부하기
+    //로그인 유저를 식별하는 법, 글쓴이를 적을 필요없으니 view도 수정한다.
     @RequestMapping(value="/insert", method= RequestMethod.GET)
-    public String insert(){
+    public String insert(Model model, Principal principal){
+        //SecurityContext, Principle은 둘 다 인증정보를 가지고 있는 객체이다.
+        System.out.println(principal.getName());
+        //principl.getName()은 현재 로그인 유저 아이디를 리턴한다.
+        model.addAttribute("username", principal.getName());
         return "blog/form";
     }
+
 
     @RequestMapping(value="/insert", method=RequestMethod.POST)
     public String insert(Blog blog){

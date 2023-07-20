@@ -100,10 +100,13 @@
         <a class="btn btn-primary" href="/blog/list" method="GET">목록</a>
 
         <div class="row fifth-row">
+        
+        <c:if test="{username eq blog.writer}">
              <form action="/blog/delete" method="POST">
                 <input type="hidden" name="blogId" value="${blogId}">
                 <input type="submit" class="btn btn-secondary" value="글삭제">
             </form>
+        </c:if>
             <form action="/blog/updateform" method="POST">
                 <input type="hidden" name="blogId" value="${blogId}">
                 <input type="submit" class="btn btn-secondary" value="글수정">
